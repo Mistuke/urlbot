@@ -1,12 +1,12 @@
 #!/usr/bin/python
 import urlbot
 
-HOST='irc.eagle.y.se'
+HOST='irc.freenode.net'
 PORT=6667
-NICK='urlbot123'
-IDENT='pybot'
-REALNAME='s1ash'
-CHANNEL='#testurltitle'
+NICK='phyx-bot'
+IDENT='phyx-bot'
+REALNAME='url botty'
+CHANNEL='#phyx'
 
 bot = urlbot.URLBot(HOST, PORT, NICK, IDENT, REALNAME, CHANNEL)
 bot.run()

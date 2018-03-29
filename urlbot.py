@@ -17,7 +17,7 @@ class URLBot():
         self.name = name
         self.chan = chan
         self.desc = urldescription.URLdescription()
-        self.welcome = 'Welcome to the Internet Relay Network' #FIXME
+        self.welcome = 'Welcome to' #FIXME
         self.sock = socket.socket( )
 
     def parsemsg(self):
@@ -29,6 +29,21 @@ class URLBot():
         msgpart = re.sub(r'[^\x20-\x7e]', '', msgpart)
 
         for w in msgpart.split(' '):
+            # Check if phabricator diff
+            if w.startswith ('D'):
+               w='https://phabricator.haskell.org/' + w
+
+            # Check if trac issue
+            if w.startswith ('#'):
+               w='https://ghc.haskell.org/trac/ghc/ticket/' + w[1:]
+
+            # Check if git commit hash
+            match = re.match ("[a-fA-F0-9]{40}|[a-fA-F0-9]{7}", w)
+            if match and not w.startswith ("http"):
+                w='https://github.com/ghc/ghc/commit/' + match.group(0)
+                # doesn't seem to put commit title in.
+                # w='https://git.haskell.org/ghc.git/commit/' + match.group(0)
+
             o = urlparse(w)
             if len(o.netloc)!=0:
                 print int(time.time()),'checking url: "'+w.strip()+'"'
@@ -36,6 +51,7 @@ class URLBot():
                 if len(title)!=0:
                     urllogger.URLlogger(w, title, sender[0]).start()
                     title_decoded = self.desc.unescape(title)  # Remove '&#8226;' etc
+                    title_decoded = title_decoded + " - " + w
                     print int(time.time()),'PRIVMSG '+info[2]+' :'+title_decoded
                     if w.strip() != title_decoded:
                         self.sock.send('PRIVMSG '+info[2]+' :'+title_decoded+'\n')
@@ -61,7 +77,10 @@ class URLBot():
                 print int(time.time()),'JOIN '+self.chan
                 self.sock.send('JOIN '+self.chan+'\n')
             if self.line.find('PRIVMSG')!=-1:
-                self.parsemsg()
+                try:
+                    self.parsemsg()
+                except Exception, e:
+                    print e
             self.line=self.line.rstrip()
             self.line=self.line.split()
             if(self.line[0]=='PING'):

@@ -33,13 +33,20 @@ class URLdescription():
             if inTitle:
                 title=title+' '+html
         title=title.strip()
-        title=self.unescape(title)
+        title=self.unescape(title).strip()
+        try:
+            title=re.sub(r'[^\x00-\x7f]',r'', title)
+        except Exception, e:
+            print e
+        finally:
+            pass
+
         return title
 
     def fetchtitle(self, url):
         url = url.strip()
-        match = re.search('wikipedia.org', url)
-        if match:
+        match = re.search('haskell.org|https://github.com/ghc/|https://github.com/haskell/', url)
+        if not match:
             return url
 
         try:
