@@ -45,8 +45,8 @@ class URLdescription():
 
     def fetchtitle(self, url):
         url = url.strip()
-        match = re.search('haskell.org|https://github.com/ghc/|https://github.com/haskell/', url)
-        if not match:
+        match = re.search('haskell.org|github.com/ghc/|github.com/haskell/', url)
+        if not match or url.startswith('https://phabricator.haskell.org/harbormaster/build/'):
             return url
 
         try:

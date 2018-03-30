@@ -48,7 +48,7 @@ class URLBot():
             if len(o.netloc)!=0:
                 print int(time.time()),'checking url: "'+w.strip()+'"'
                 title = self.desc.fetchtitle(w.strip())
-                if len(title)!=0:
+                if len(title)!=0 and title!=w and title!='Login':
                     urllogger.URLlogger(w, title, sender[0]).start()
                     title_decoded = self.desc.unescape(title)  # Remove '&#8226;' etc
                     title_decoded = title_decoded + " - " + w
