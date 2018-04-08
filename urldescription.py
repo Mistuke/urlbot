@@ -46,9 +46,9 @@ class URLdescription():
     def fetchtitle(self, url):
         url = url.strip()
         match = re.search('haskell.org|github.com/ghc/|github.com/haskell/', url)
-        if not match
-            or url.startswith('https://phabricator.haskell.org/harbormaster/build/'
-            or url.startswith('https://ghc.haskell.org/trac/ghc/wiki/'):
+        if (not match
+            or url.startswith('https://phabricator.haskell.org/harbormaster/build/')
+            or url.startswith('https://ghc.haskell.org/trac/ghc/wiki/')):
             return url
 
         # Don't use github blobs
